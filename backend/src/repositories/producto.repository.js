@@ -30,3 +30,18 @@ export const cambiarEstadoProducto = async (id, activo) => {
     .where({ id })
     .update({ activo });
 };
+export const agregarCategoriaAProducto = async (
+  productoId,
+  categoriaId
+) => {
+  return await db.orm.public.ProductoCategoria.create({
+    productoId,
+    categoriaId,
+  });
+};
+// Obtener las categorías de un producto
+export const obtenerCategoriasDeProducto = async (productoId) => {
+  return await db.orm.public.ProductoCategoria
+    .where({ productoId })
+    .all();
+};
