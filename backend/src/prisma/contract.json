@@ -4,6 +4,10 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
+    "administrador": {
+      "model": "Administrador",
+      "namespace": "public"
+    },
     "categoria": {
       "model": "Categoria",
       "namespace": "public"
@@ -65,6 +69,57 @@
           }
         },
         "models": {
+          "Administrador": {
+            "fields": {
+              "activo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "password": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "usuario": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {},
+            "storage": {
+              "fields": {
+                "activo": {
+                  "column": "activo"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "password": {
+                  "column": "password"
+                },
+                "usuario": {
+                  "column": "usuario"
+                }
+              },
+              "namespaceId": "public",
+              "table": "administrador"
+            }
+          },
           "Categoria": {
             "fields": {
               "activo": {
@@ -828,6 +883,52 @@
       "public": {
         "entries": {
           "table": {
+            "administrador": {
+              "columns": {
+                "activo": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "password": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "usuario": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "usuario"
+                  ]
+                }
+              ]
+            },
             "categoria": {
               "columns": {
                 "activo": {
@@ -1432,7 +1533,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "2bd9d962850d2e58857853e5af9a0b0baa2e46111f058d70690c62b3f41aed9f"
+    "storageHash": "0bdd28bbaa511768ed4c3bcc8c953bf38944ddb1e1837bb334393c6d100b2d7e"
   },
   "capabilities": {
     "postgres": {

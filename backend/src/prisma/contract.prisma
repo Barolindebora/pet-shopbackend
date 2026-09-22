@@ -107,3 +107,9 @@ model ListaReposicion {
   proveedorId       Int
   proveedor         Proveedor @relation(fields: [proveedorId], references: [id])
 }
+model Administrador {
+  id       Int     @id @default(autoincrement())
+  usuario  String  @unique
+  password String
+  activo   Boolean @default(true)
+}
