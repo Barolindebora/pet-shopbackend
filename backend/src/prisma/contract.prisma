@@ -48,6 +48,7 @@ model Producto {
   descripcion    String?
   codigoBarra    String?      @unique
   presentacion   String?
+  imagenUrl      String?
   unidadStock    UnidadStock
 
   stockActual    Decimal      

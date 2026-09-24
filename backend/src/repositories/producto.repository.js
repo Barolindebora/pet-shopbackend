@@ -45,3 +45,17 @@ export const obtenerCategoriasDeProducto = async (productoId) => {
     .where({ productoId })
     .all();
 };
+// Eliminar todas las categorías asignadas a un producto
+export const eliminarCategoriasDeProducto = async (productoId) => {
+  const categoriasActuales =
+    await obtenerCategoriasDeProducto(productoId);
+
+  for (const relacion of categoriasActuales) {
+    await db.orm.public.ProductoCategoria
+      .where({
+        productoId: relacion.productoId,
+        categoriaId: relacion.categoriaId,
+      })
+      .delete();
+  }
+};

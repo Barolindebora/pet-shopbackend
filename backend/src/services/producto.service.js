@@ -3,8 +3,10 @@ import {
   obtenerProductoPorId,
   crearProducto,
   actualizarProducto,
-  cambiarEstadoProducto, agregarCategoriaAProducto,
-  obtenerCategoriasDeProducto
+  cambiarEstadoProducto,
+  agregarCategoriaAProducto,
+  obtenerCategoriasDeProducto,
+  eliminarCategoriasDeProducto
 } from "../repositories/producto.repository.js";
 
 // Listar todos los productos
@@ -54,4 +56,16 @@ export const asignarCategoriasAProducto = async (
 // Obtener las categorías asignadas a un producto
 export const listarCategoriasDeProducto = async (productoId) => {
   return await obtenerCategoriasDeProducto(productoId);
+};
+// Reemplazar las categorías asignadas a un producto
+export const reemplazarCategoriasDeProducto = async (
+  productoId,
+  categorias
+) => {
+  await eliminarCategoriasDeProducto(productoId);
+
+  return await asignarCategoriasAProducto(
+    productoId,
+    categorias
+  );
 };

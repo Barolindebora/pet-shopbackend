@@ -7,8 +7,14 @@ import movimientoStockRoutes from "./src/routes/movimientoStock.routes.js";
 import listaReposicionRoutes from "./src/routes/listaReposicion.routes.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import { verificarToken } from "./src/middlewares/auth.middleware.js";
+import cors from "cors";
 const app = express();
 const PORT = 3000;
+app.use(cors({
+  origin: "http://localhost:5173",
+}));
+
+app.use(express.json());
 
 app.use(express.json());
 // Login público

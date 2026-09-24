@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom"
 function Sidebar() {
   return (
     <aside className="w-64 min-h-screen bg-purple-700 text-white p-6">
@@ -6,34 +7,42 @@ function Sidebar() {
       </h2>
 
       <nav className="flex flex-col gap-4">
-        <button className="text-left hover:text-purple-200">
-          Inicio
-        </button>
 
-        <button className="text-left hover:text-purple-200">
-          Productos
-        </button>
+  <NavLink
+    to="/admin"
+    className="text-left hover:text-purple-200"
+  >
+    Inicio
+  </NavLink>
 
-        <button className="text-left hover:text-purple-200">
-          Stock
-        </button>
+  <NavLink
+    to="/admin/productos"
+    className="text-left hover:text-purple-200"
+  >
+    Productos
+  </NavLink>
 
-        <button className="text-left hover:text-purple-200">
-          Reposición
-        </button>
+  <button className="text-left hover:text-purple-200">
+    Stock
+  </button>
 
-        <button className="text-left hover:text-purple-200">
-          Proveedores
-        </button>
+  <button className="text-left hover:text-purple-200">
+    Reposición
+  </button>
 
-        <button className="text-left hover:text-purple-200">
-          Marcas
-        </button>
+  <button className="text-left hover:text-purple-200">
+    Proveedores
+  </button>
 
-        <button className="text-left hover:text-purple-200">
-          Categorías
-        </button>
-      </nav>
+  <button className="text-left hover:text-purple-200">
+    Marcas
+  </button>
+
+  <button className="text-left hover:text-purple-200">
+    Categorías
+  </button>
+
+</nav>
     </aside>
   )
 }

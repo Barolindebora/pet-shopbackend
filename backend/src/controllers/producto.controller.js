@@ -6,6 +6,7 @@ import {
   modificarEstadoProducto,
   asignarCategoriasAProducto,
   listarCategoriasDeProducto,
+  reemplazarCategoriasDeProducto,
 } from "../services/producto.service.js";
 
 import { buscarProveedorPorId } from "../services/proveedor.service.js";
@@ -70,6 +71,7 @@ export const crearProducto = async (req, res) => {
       descripcion,
       codigoBarra,
       presentacion,
+      imagenUrl,
       unidadStock,
       stockActual,
       stockMinimo,
@@ -145,6 +147,7 @@ export const crearProducto = async (req, res) => {
       descripcion,
       codigoBarra,
       presentacion,
+      imagenUrl,
       unidadStock,
       stockActual,
       stockMinimo,
@@ -200,6 +203,7 @@ export const editarProducto = async (req, res) => {
       descripcion,
       codigoBarra,
       presentacion,
+      imagenUrl,
       unidadStock,
       stockMinimo,
       costoCompra,
@@ -208,6 +212,7 @@ export const editarProducto = async (req, res) => {
       precioTarjeta,
       proveedorId,
       marcaId,
+      categorias,
     } = req.body;
 
 
@@ -239,7 +244,27 @@ export const editarProducto = async (req, res) => {
         error: "Marca no encontrada",
       });
     }
+// --------------------------------------------------
+// Verificar categorías
+// --------------------------------------------------
 
+if (!Array.isArray(categorias) || categorias.length === 0) {
+  return res.status(400).json({
+    error: "El producto debe tener al menos una categoría",
+  });
+}
+
+for (const categoriaId of categorias) {
+  const categoria = await buscarCategoriaPorId(
+    Number(categoriaId)
+  );
+
+  if (!categoria) {
+    return res.status(404).json({
+      error: `Categoría ${categoriaId} no encontrada`,
+    });
+  }
+}
 
     // --------------------------------------------------
     // Actualizar producto
@@ -253,6 +278,7 @@ export const editarProducto = async (req, res) => {
         descripcion,
         codigoBarra,
         presentacion,
+        imagenUrl,
         unidadStock,
         stockMinimo,
         costoCompra,
@@ -261,8 +287,13 @@ export const editarProducto = async (req, res) => {
         precioTarjeta,
         proveedorId: Number(proveedorId),
         marcaId: Number(marcaId),
+        
       }
     );
+    await reemplazarCategoriasDeProducto(
+  id,
+  categorias
+);
 
     res.json(productoActualizado);
 
