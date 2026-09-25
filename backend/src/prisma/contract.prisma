@@ -60,6 +60,8 @@ model Producto {
   precioTarjeta  Decimal
 
   activo         Boolean      @default(true)
+  ventaSinStock      Boolean @default(false)
+  diasDisponibilidad Int?
 
   proveedorId    Int
   proveedor      Proveedor    @relation(fields: [proveedorId], references: [id])

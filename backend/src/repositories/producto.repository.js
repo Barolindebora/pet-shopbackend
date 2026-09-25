@@ -59,3 +59,15 @@ export const eliminarCategoriasDeProducto = async (productoId) => {
       .delete();
   }
 };
+export const modificarVentaSinStockProducto = async (
+  id,
+  ventaSinStock,
+  diasDisponibilidad
+) => {
+  return await db.orm.public.Producto
+    .where({ id })
+    .update({
+      ventaSinStock,
+      diasDisponibilidad,
+    });
+};

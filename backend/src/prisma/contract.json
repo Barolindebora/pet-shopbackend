@@ -488,6 +488,13 @@
                   "kind": "scalar"
                 }
               },
+              "diasDisponibilidad": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -576,6 +583,13 @@
                   "entityName": "UnidadStock",
                   "namespaceId": "public",
                   "plane": "domain"
+                }
+              },
+              "ventaSinStock": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
                 }
               }
             },
@@ -672,6 +686,9 @@
                 "descripcion": {
                   "column": "descripcion"
                 },
+                "diasDisponibilidad": {
+                  "column": "diasDisponibilidad"
+                },
                 "id": {
                   "column": "id"
                 },
@@ -707,6 +724,9 @@
                 },
                 "unidadStock": {
                   "column": "unidadStock"
+                },
+                "ventaSinStock": {
+                  "column": "ventaSinStock"
                 }
               },
               "namespaceId": "public",
@@ -1272,6 +1292,11 @@
                   "nativeType": "text",
                   "nullable": true
                 },
+                "diasDisponibilidad": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id": {
                   "codecId": "pg/int4@1",
                   "default": {
@@ -1341,6 +1366,15 @@
                     "namespaceId": "public",
                     "plane": "storage"
                   }
+                },
+                "ventaSinStock": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
                 }
               },
               "foreignKeys": [
@@ -1548,7 +1582,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "628099184a953a8f1796714fdb663d66772d1f0d359b281b047a47af1bc6d5da"
+    "storageHash": "8e2401dc64a951fcd02e37bf28c14baadfb964944b900a3d9e058513a1386a30"
   },
   "capabilities": {
     "postgres": {

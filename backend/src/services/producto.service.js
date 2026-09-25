@@ -6,7 +6,8 @@ import {
   cambiarEstadoProducto,
   agregarCategoriaAProducto,
   obtenerCategoriasDeProducto,
-  eliminarCategoriasDeProducto
+  eliminarCategoriasDeProducto,
+  modificarVentaSinStockProducto,
 } from "../repositories/producto.repository.js";
 
 // Listar todos los productos
@@ -67,5 +68,30 @@ export const reemplazarCategoriasDeProducto = async (
   return await asignarCategoriasAProducto(
     productoId,
     categorias
+  );
+};
+export const configurarVentaSinStock = async (
+  id,
+  ventaSinStock,
+  diasDisponibilidad
+) => {
+  if (ventaSinStock) {
+    const dias = Number(diasDisponibilidad);
+
+    if (!Number.isInteger(dias) || dias <= 0) {
+      throw new Error("DIAS_DISPONIBILIDAD_INVALIDOS");
+    }
+
+    return await modificarVentaSinStockProducto(
+      id,
+      true,
+      dias
+    );
+  }
+
+  return await modificarVentaSinStockProducto(
+    id,
+    false,
+    null
   );
 };

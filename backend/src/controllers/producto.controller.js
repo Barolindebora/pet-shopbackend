@@ -7,6 +7,7 @@ import {
   asignarCategoriasAProducto,
   listarCategoriasDeProducto,
   reemplazarCategoriasDeProducto,
+  configurarVentaSinStock,
 } from "../services/producto.service.js";
 
 import { buscarProveedorPorId } from "../services/proveedor.service.js";
@@ -244,27 +245,30 @@ export const editarProducto = async (req, res) => {
         error: "Marca no encontrada",
       });
     }
-// --------------------------------------------------
-// Verificar categorías
-// --------------------------------------------------
 
-if (!Array.isArray(categorias) || categorias.length === 0) {
-  return res.status(400).json({
-    error: "El producto debe tener al menos una categoría",
-  });
-}
 
-for (const categoriaId of categorias) {
-  const categoria = await buscarCategoriaPorId(
-    Number(categoriaId)
-  );
+    // --------------------------------------------------
+    // Verificar categorías
+    // --------------------------------------------------
 
-  if (!categoria) {
-    return res.status(404).json({
-      error: `Categoría ${categoriaId} no encontrada`,
-    });
-  }
-}
+    if (!Array.isArray(categorias) || categorias.length === 0) {
+      return res.status(400).json({
+        error: "El producto debe tener al menos una categoría",
+      });
+    }
+
+    for (const categoriaId of categorias) {
+      const categoria = await buscarCategoriaPorId(
+        Number(categoriaId)
+      );
+
+      if (!categoria) {
+        return res.status(404).json({
+          error: `Categoría ${categoriaId} no encontrada`,
+        });
+      }
+    }
+
 
     // --------------------------------------------------
     // Actualizar producto
@@ -287,13 +291,19 @@ for (const categoriaId of categorias) {
         precioTarjeta,
         proveedorId: Number(proveedorId),
         marcaId: Number(marcaId),
-        
       }
     );
+
+
+    // --------------------------------------------------
+    // Reemplazar categorías
+    // --------------------------------------------------
+
     await reemplazarCategoriasDeProducto(
-  id,
-  categorias
-);
+      id,
+      categorias
+    );
+
 
     res.json(productoActualizado);
 
@@ -395,6 +405,57 @@ export const obtenerCategoriasDelProducto = async (req, res) => {
 
     res.status(500).json({
       error: "Error al obtener las categorías del producto",
+    });
+  }
+};
+// ======================================================
+// CONFIGURAR VENTA SIN STOCK
+// ======================================================
+
+export const configurarVentaSinStockProducto = async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+
+    const productoExistente = await buscarProductoPorId(id);
+
+    if (!productoExistente) {
+      return res.status(404).json({
+        error: "Producto no encontrado",
+      });
+    }
+
+    const {
+      ventaSinStock,
+      diasDisponibilidad,
+    } = req.body;
+
+    if (typeof ventaSinStock !== "boolean") {
+      return res.status(400).json({
+        error: "ventaSinStock debe ser true o false",
+      });
+    }
+
+    const productoActualizado =
+      await configurarVentaSinStock(
+        id,
+        ventaSinStock,
+        diasDisponibilidad
+      );
+
+    res.json(productoActualizado);
+
+  } catch (error) {
+    console.error(error);
+
+    if (error.message === "DIAS_DISPONIBILIDAD_INVALIDOS") {
+      return res.status(400).json({
+        error:
+          "Debe indicar una cantidad válida de días de disponibilidad",
+      });
+    }
+
+    res.status(500).json({
+      error: "Error al configurar la venta sin stock",
     });
   }
 };

@@ -8,6 +8,7 @@ import {
   desactivarProducto,
   reactivarProducto,
   obtenerCategoriasDelProducto,
+  configurarVentaSinStockProducto,
 } from "../controllers/producto.controller.js";
 
 const router = express.Router();
@@ -16,7 +17,10 @@ router.get("/", obtenerProductos);
 
 // Categorías de un producto
 router.get("/:id/categorias", obtenerCategoriasDelProducto);
-
+router.patch(
+  "/:id/venta-sin-stock",
+  configurarVentaSinStockProducto
+);
 // Producto por ID
 router.get("/:id", obtenerProductoPorId);
 
