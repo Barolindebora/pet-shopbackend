@@ -8,6 +8,7 @@ import {
   obtenerCategoriasDeProducto,
   eliminarCategoriasDeProducto,
   modificarVentaSinStockProducto,
+  obtenerProductoPorCodigoBarra,
 } from "../repositories/producto.repository.js";
 
 // Listar todos los productos
@@ -95,3 +96,13 @@ export const configurarVentaSinStock = async (
     null
   );
 };
+export const buscarProductoPorCodigoBarra = async (codigoBarra) => {
+  if (!codigoBarra || !codigoBarra.trim()) {
+    throw new Error("CODIGO_BARRA_INVALIDO");
+  }
+
+  return await obtenerProductoPorCodigoBarra(
+    codigoBarra.trim()
+  );
+};
+

@@ -9,6 +9,7 @@ import {
   reactivarProducto,
   obtenerCategoriasDelProducto,
   configurarVentaSinStockProducto,
+  obtenerProductoPorCodigoBarra,
 } from "../controllers/producto.controller.js";
 
 const router = express.Router();
@@ -22,6 +23,10 @@ router.patch(
   configurarVentaSinStockProducto
 );
 // Producto por ID
+router.get(
+  "/codigo-barra/:codigoBarra",
+  obtenerProductoPorCodigoBarra
+);
 router.get("/:id", obtenerProductoPorId);
 
 router.post("/", crearProducto);

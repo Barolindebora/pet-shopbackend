@@ -170,7 +170,97 @@ const [productoEditando, setProductoEditando] = useState(null)
     alert(error.message)
   }
 }
+// =========================
+// CONFIGURAR VENTA SIN STOCK
+// =========================
 
+const configurarVentaSinStock = async (
+  producto,
+  ventaSinStock,
+  diasDisponibilidad = null
+) => {
+  try {
+    const token = localStorage.getItem("token")
+
+    const respuesta = await fetch(
+      `http://localhost:3000/productos/${producto.id}/venta-sin-stock`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ventaSinStock,
+          diasDisponibilidad,
+        }),
+      }
+    )
+
+    const datos = await respuesta.json()
+
+    if (!respuesta.ok) {
+      throw new Error(
+        datos.error || "No se pudo modificar la venta sin stock"
+      )
+    }
+
+    setProductos((productosActuales) =>
+      productosActuales.map((productoActual) =>
+        productoActual.id === datos.id
+          ? datos
+          : productoActual
+      )
+    )
+
+  } catch (error) {
+    console.error(error)
+    alert(error.message)
+  }
+}
+// =========================
+// CAMBIAR ESTADO DEL PRODUCTO
+// =========================
+
+const cambiarEstadoProducto = async (producto) => {
+  try {
+    const token = localStorage.getItem("token")
+
+    const accion = producto.activo
+      ? "desactivar"
+      : "reactivar"
+
+    const respuesta = await fetch(
+      `http://localhost:3000/productos/${producto.id}/${accion}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+
+    const datos = await respuesta.json()
+
+    if (!respuesta.ok) {
+      throw new Error(
+        datos.error || "No se pudo cambiar el estado del producto"
+      )
+    }
+
+    setProductos((productosActuales) =>
+      productosActuales.map((productoActual) =>
+        productoActual.id === datos.id
+          ? datos
+          : productoActual
+      )
+    )
+
+  } catch (error) {
+    console.error(error)
+    alert(error.message)
+  }
+}
 
   // =========================
   // CARGANDO
@@ -325,29 +415,69 @@ const [productoEditando, setProductoEditando] = useState(null)
 
                   <td className="px-5 py-4">
 
-                    {producto.activo ? (
-
-                      <span className="text-green-700 font-medium">
-                        Activo
-                      </span>
-
-                    ) : (
-
-                      <span className="text-red-600 font-medium">
-                        Inactivo
-                      </span>
-
-                    )}
+                   <button
+  type="button"
+  onClick={() => cambiarEstadoProducto(producto)}
+  className={
+    producto.activo
+      ? "text-red-600 hover:text-red-800 font-medium"
+      : "text-green-700 hover:text-green-900 font-medium"
+  }
+>
+  {producto.activo
+    ? "Dejar de vender"
+    : "Volver a vender"}
+</button>
 
                   </td>
-                  <td className="px-5 py-4">
+   <td className="px-5 py-4">
+  <div className="flex flex-col items-start gap-2">
+
+    <button
+      type="button"
+      onClick={() => abrirEdicion(producto)}
+      className="text-purple-700 hover:text-purple-900 font-medium"
+    >
+      Editar
+    </button>
+
+   {producto.ventaSinStock ? (
   <button
-  type="button"
- onClick={() => abrirEdicion(producto)}
-  className="text-purple-700 hover:text-purple-900 font-medium"
->
-  Editar
-</button>
+    type="button"
+    onClick={() =>
+      configurarVentaSinStock(
+        producto,
+        false
+      )
+    }
+    className="text-green-700 font-medium"
+  >
+    Se vende por encargo
+  </button>
+) : (
+  <button
+    type="button"
+    onClick={() => {
+      const dias = window.prompt(
+        "¿En cuántos días estará disponible este producto?"
+      )
+
+      if (dias === null) {
+        return
+      }
+
+      configurarVentaSinStock(
+        producto,
+        true,
+        dias
+      )
+    }}
+    className="text-gray-500 hover:text-blue-700 font-medium"
+  >
+    No se vende por encargo
+  </button>
+)}
+  </div>
 </td>
 
                 </tr>

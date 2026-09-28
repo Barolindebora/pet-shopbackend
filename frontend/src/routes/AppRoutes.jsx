@@ -3,12 +3,14 @@ import {
   Route,
 } from "react-router-dom"
 
+
 import Sidebar from "../components/Sidebar"
 import RutaProtegida from "../components/RutaProtegida"
 
 import InicioAdmin from "../pages/admin/InicioAdmin"
 import LoginAdmin from "../pages/admin/LoginAdmin"
 import Productos from "../pages/admin/Productos"
+import Stock from "../pages/admin/Stock"
 
 
 function LayoutAdmin({ children }) {
@@ -59,6 +61,16 @@ function AppRoutes() {
           </RutaProtegida>
         }
       />
+      <Route
+  path="/admin/stock"
+  element={
+    <RutaProtegida>
+      <LayoutAdmin>
+        <Stock />
+      </LayoutAdmin>
+    </RutaProtegida>
+  }
+/>
 
     </Routes>
   )

@@ -71,3 +71,9 @@ export const modificarVentaSinStockProducto = async (
       diasDisponibilidad,
     });
 };
+
+export const obtenerProductoPorCodigoBarra = async (codigoBarra) => {
+  return await db.orm.public.Producto
+    .where({ codigoBarra })
+    .first();
+};

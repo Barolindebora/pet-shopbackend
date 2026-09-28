@@ -21,10 +21,12 @@ function Sidebar() {
   >
     Productos
   </NavLink>
-
-  <button className="text-left hover:text-purple-200">
-    Stock
-  </button>
+<NavLink
+  to="/admin/stock"
+  className="text-left hover:text-purple-200"
+>
+  Stock
+</NavLink>
 
   <button className="text-left hover:text-purple-200">
     Reposición

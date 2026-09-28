@@ -8,6 +8,7 @@ import {
   listarCategoriasDeProducto,
   reemplazarCategoriasDeProducto,
   configurarVentaSinStock,
+  buscarProductoPorCodigoBarra,
 } from "../services/producto.service.js";
 
 import { buscarProveedorPorId } from "../services/proveedor.service.js";
@@ -456,6 +457,39 @@ export const configurarVentaSinStockProducto = async (req, res) => {
 
     res.status(500).json({
       error: "Error al configurar la venta sin stock",
+    });
+  }
+};
+// ======================================================
+// OBTENER PRODUCTO POR CÓDIGO DE BARRAS
+// ======================================================
+
+export const obtenerProductoPorCodigoBarra = async (req, res) => {
+  try {
+    const { codigoBarra } = req.params;
+
+    const producto =
+      await buscarProductoPorCodigoBarra(codigoBarra);
+
+    if (!producto) {
+      return res.status(404).json({
+        error: "Producto no encontrado",
+      });
+    }
+
+    res.json(producto);
+
+  } catch (error) {
+    console.error(error);
+
+    if (error.message === "CODIGO_BARRA_INVALIDO") {
+      return res.status(400).json({
+        error: "Código de barras inválido",
+      });
+    }
+
+    res.status(500).json({
+      error: "Error al buscar el producto por código de barras",
     });
   }
 };
