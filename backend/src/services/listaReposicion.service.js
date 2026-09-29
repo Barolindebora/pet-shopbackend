@@ -7,11 +7,47 @@ import {
   actualizarProveedorReposicion,
   eliminarReposicion,
 } from "../repositories/listaReposicion.repository.js";
+import { buscarProductoPorId } from "./producto.service.js";
+import { buscarProveedorPorId } from "./proveedor.service.js";
 
 
 // Listar todas las reposiciones pendientes
 export const listarReposiciones = async () => {
-  return await obtenerListaReposicion();
+  const reposiciones = await obtenerListaReposicion();
+
+  const reposicionesCompletas = await Promise.all(
+    reposiciones.map(async (reposicion) => {
+      const producto = await buscarProductoPorId(
+        Number(reposicion.productoId)
+      );
+
+      const proveedor = await buscarProveedorPorId(
+        Number(reposicion.proveedorId)
+      );
+
+      return {
+        ...reposicion,
+
+        producto: producto
+          ? {
+              id: producto.id,
+              nombre: producto.nombre,
+              presentacion: producto.presentacion,
+              unidadStock: producto.unidadStock,
+            }
+          : null,
+
+        proveedor: proveedor
+          ? {
+              id: proveedor.id,
+              nombre: proveedor.nombre,
+            }
+          : null,
+      };
+    })
+  );
+
+  return reposicionesCompletas;
 };
 
 

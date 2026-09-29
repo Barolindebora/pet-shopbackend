@@ -6,7 +6,7 @@ import {
   actualizarStockProducto,
 } from "../repositories/movimientoStock.repository.js";
 
-import { buscarProductoPorId } from "./producto.service.js";
+import { buscarProductoPorId, modificarProducto } from "./producto.service.js";
 
 import { sumarVentaAReposicion } from "./listaReposicion.service.js";
 
@@ -31,13 +31,15 @@ export const listarMovimientosPorProducto = async (productoId) => {
 
 // Registrar una entrada de stock
 export const registrarEntradaStock = async (datos) => {
-  const {
-    productoId,
-    cantidad,
-    costoCompra,
-    observacion,
-    proveedorId,
-  } = datos;
+ const {
+  productoId,
+  cantidad,
+  costoCompra,
+  precioEfectivo,
+  precioTarjeta,
+  observacion,
+  proveedorId,
+} = datos;
 
   const producto = await buscarProductoPorId(Number(productoId));
 
@@ -59,7 +61,15 @@ export const registrarEntradaStock = async (datos) => {
     Number(productoId),
     String(nuevoStock)
   );
-
+// Actualizar costo y precios actuales del producto
+await modificarProducto(
+  Number(productoId),
+  {
+    costoCompra: costoCompra ?? producto.costoCompra,
+    precioEfectivo: precioEfectivo ?? producto.precioEfectivo,
+    precioTarjeta: precioTarjeta ?? producto.precioTarjeta,
+  }
+);
   // Registrar el movimiento de entrada
   return await crearMovimiento({
     tipo: "ENTRADA",

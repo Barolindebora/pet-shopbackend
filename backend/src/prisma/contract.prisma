@@ -13,6 +13,17 @@ enum TipoMovimiento {
   ENTRADA
   SALIDA
 }
+enum CanalVenta {
+  @@type("pg/text@1")
+  LOCAL
+  ONLINE
+}
+
+enum FormaPago {
+  @@type("pg/text@1")
+  EFECTIVO
+  TARJETA
+}
 
 model Proveedor {
   id           Int                @id @default(autoincrement())
@@ -72,6 +83,7 @@ model Producto {
   categorias     ProductoCategoria[]
   movimientos    MovimientoStock[]
   reposiciones   ListaReposicion[]
+  detallesVenta DetalleVenta[]
 }
 
 model ProductoCategoria {
@@ -115,4 +127,25 @@ model Administrador {
   usuario  String  @unique
   password String
   activo   Boolean @default(true)
+}
+model Venta {
+  id        Int            @id @default(autoincrement())
+  fecha     DateTime       @default(now())
+  canal     CanalVenta
+  formaPago FormaPago
+  total     Decimal
+  detalles  DetalleVenta[]
+}
+
+model DetalleVenta {
+  id             Int      @id @default(autoincrement())
+  cantidad       Decimal
+  precioUnitario Decimal
+  subtotal       Decimal
+
+  ventaId Int
+  venta   Venta @relation(fields: [ventaId], references: [id])
+
+  productoId Int
+  producto   Producto @relation(fields: [productoId], references: [id])
 }

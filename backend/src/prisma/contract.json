@@ -12,6 +12,10 @@
       "model": "Categoria",
       "namespace": "public"
     },
+    "detalleVenta": {
+      "model": "DetalleVenta",
+      "namespace": "public"
+    },
     "listaReposicion": {
       "model": "ListaReposicion",
       "namespace": "public"
@@ -35,12 +39,42 @@
     "proveedor": {
       "model": "Proveedor",
       "namespace": "public"
+    },
+    "venta": {
+      "model": "Venta",
+      "namespace": "public"
     }
   },
   "domain": {
     "namespaces": {
       "public": {
         "enum": {
+          "CanalVenta": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "LOCAL",
+                "value": "LOCAL"
+              },
+              {
+                "name": "ONLINE",
+                "value": "ONLINE"
+              }
+            ]
+          },
+          "FormaPago": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "EFECTIVO",
+                "value": "EFECTIVO"
+              },
+              {
+                "name": "TARJETA",
+                "value": "TARJETA"
+              }
+            ]
+          },
           "TipoMovimiento": {
             "codecId": "pg/text@1",
             "members": [
@@ -175,6 +209,110 @@
               },
               "namespaceId": "public",
               "table": "categoria"
+            }
+          },
+          "DetalleVenta": {
+            "fields": {
+              "cantidad": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "precioUnitario": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "productoId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "subtotal": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "ventaId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "producto": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "productoId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Producto",
+                  "namespace": "public"
+                }
+              },
+              "venta": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "ventaId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Venta",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "cantidad": {
+                  "column": "cantidad"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "precioUnitario": {
+                  "column": "precioUnitario"
+                },
+                "productoId": {
+                  "column": "productoId"
+                },
+                "subtotal": {
+                  "column": "subtotal"
+                },
+                "ventaId": {
+                  "column": "ventaId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "detalleVenta"
             }
           },
           "ListaReposicion": {
@@ -609,6 +747,21 @@
                   "namespace": "public"
                 }
               },
+              "detallesVenta": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "productoId"
+                  ]
+                },
+                "to": {
+                  "model": "DetalleVenta",
+                  "namespace": "public"
+                }
+              },
               "marca": {
                 "cardinality": "N:1",
                 "nullable": false,
@@ -903,6 +1056,95 @@
               "namespaceId": "public",
               "table": "proveedor"
             }
+          },
+          "Venta": {
+            "fields": {
+              "canal": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "CanalVenta",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "fecha": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "formaPago": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "FormaPago",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "total": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "detalles": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "ventaId"
+                  ]
+                },
+                "to": {
+                  "model": "DetalleVenta",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "canal": {
+                  "column": "canal"
+                },
+                "fecha": {
+                  "column": "fecha"
+                },
+                "formaPago": {
+                  "column": "formaPago"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "total": {
+                  "column": "total"
+                }
+              },
+              "namespaceId": "public",
+              "table": "venta"
+            }
           }
         }
       }
@@ -999,6 +1241,102 @@
                   ]
                 }
               ]
+            },
+            "detalleVenta": {
+              "columns": {
+                "cantidad": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "precioUnitario": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "productoId": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "subtotal": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "ventaId": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "ventaId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "detalleVenta"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "venta"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "productoId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "detalleVenta"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "producto"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "productoId"
+                  ],
+                  "name": "detalleVenta_productoId_idx_cc0c10f0",
+                  "prefix": "detalleVenta_productoId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "ventaId"
+                  ],
+                  "name": "detalleVenta_ventaId_idx_4eec5214",
+                  "prefix": "detalleVenta_ventaId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
             },
             "listaReposicion": {
               "columns": {
@@ -1559,9 +1897,92 @@
                 ]
               },
               "uniques": []
+            },
+            "venta": {
+              "checks": [
+                {
+                  "expression": "\"canal\" IN ('LOCAL', 'ONLINE')",
+                  "name": "venta_canal_check_43ec2dbf",
+                  "prefix": "venta_canal_check"
+                },
+                {
+                  "expression": "\"formaPago\" IN ('EFECTIVO', 'TARJETA')",
+                  "name": "venta_formaPago_check_c21c80c5",
+                  "prefix": "venta_formaPago_check"
+                }
+              ],
+              "columns": {
+                "canal": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "CanalVenta",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "fecha": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "formaPago": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "FormaPago",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "total": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
             }
           },
           "valueSet": {
+            "CanalVenta": {
+              "kind": "valueSet",
+              "values": [
+                "LOCAL",
+                "ONLINE"
+              ]
+            },
+            "FormaPago": {
+              "kind": "valueSet",
+              "values": [
+                "EFECTIVO",
+                "TARJETA"
+              ]
+            },
             "TipoMovimiento": {
               "kind": "valueSet",
               "values": [
@@ -1582,7 +2003,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "8e2401dc64a951fcd02e37bf28c14baadfb964944b900a3d9e058513a1386a30"
+    "storageHash": "5d6164b03bc85514a97c7f62db85c60a4e3fbee989055a2289d0f6154f0942e1"
   },
   "capabilities": {
     "postgres": {

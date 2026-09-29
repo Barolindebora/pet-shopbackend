@@ -11,7 +11,7 @@ import InicioAdmin from "../pages/admin/InicioAdmin"
 import LoginAdmin from "../pages/admin/LoginAdmin"
 import Productos from "../pages/admin/Productos"
 import Stock from "../pages/admin/Stock"
-
+import Reposicion from "../pages/admin/Reposicion"
 
 function LayoutAdmin({ children }) {
   return (
@@ -67,6 +67,16 @@ function AppRoutes() {
     <RutaProtegida>
       <LayoutAdmin>
         <Stock />
+      </LayoutAdmin>
+    </RutaProtegida>
+  }
+/>
+<Route
+  path="/admin/reposicion"
+  element={
+    <RutaProtegida>
+      <LayoutAdmin>
+        <Reposicion />
       </LayoutAdmin>
     </RutaProtegida>
   }

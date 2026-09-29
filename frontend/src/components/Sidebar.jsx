@@ -27,10 +27,12 @@ function Sidebar() {
 >
   Stock
 </NavLink>
-
-  <button className="text-left hover:text-purple-200">
-    Reposición
-  </button>
+<NavLink
+  to="/admin/reposicion"
+  className="text-left hover:text-purple-200"
+>
+  Reposición
+</NavLink>
 
   <button className="text-left hover:text-purple-200">
     Proveedores
