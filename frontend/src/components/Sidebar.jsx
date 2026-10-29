@@ -34,17 +34,52 @@ function Sidebar() {
   Reposición
 </NavLink>
 
-  <button className="text-left hover:text-purple-200">
-    Proveedores
-  </button>
+<NavLink
+  to="/admin/ventas"
+  className="text-left hover:text-purple-200"
+>
+  Ventas
+</NavLink>
+<NavLink
+  to="/admin/historial-ventas"
+  className="text-left hover:text-purple-200"
+>
+  Historial de ventas
+</NavLink>
+        <NavLink
+          to="/admin/ventas-online"
+          className="text-left hover:text-purple-200"
+        >
+          Ventas online
+        </NavLink>
 
-  <button className="text-left hover:text-purple-200">
-    Marcas
-  </button>
 
-  <button className="text-left hover:text-purple-200">
-    Categorías
-  </button>
+ <NavLink
+  to="/admin/proveedores"
+  className="text-left hover:text-purple-200"
+>
+  Proveedores
+</NavLink>
+
+<NavLink
+  to="/admin/marcas"
+  className="text-left hover:text-purple-200"
+>
+  Marcas
+</NavLink>
+
+<NavLink
+  to="/admin/categorias"
+  className="text-left hover:text-purple-200"
+>
+  Categorías
+</NavLink>
+<NavLink
+  to="/admin/historias"
+  className="text-left hover:text-purple-200"
+>
+  📸 Generador de historias
+</NavLink>
 
 </nav>
     </aside>

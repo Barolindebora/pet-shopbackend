@@ -12,6 +12,11 @@ import LoginAdmin from "../pages/admin/LoginAdmin"
 import Productos from "../pages/admin/Productos"
 import Stock from "../pages/admin/Stock"
 import Reposicion from "../pages/admin/Reposicion"
+import Ventas from "../pages/admin/Ventas"
+import HistorialVentas from "../pages/admin/HistorialVentas"
+import HistorialVentasOnline from "../pages/admin/HistorialVentasOnline"
+import Marcas from "../pages/admin/Marcas"
+import GeneradorHistorias from "../pages/admin/GeneradorHistorias"
 
 function LayoutAdmin({ children }) {
   return (
@@ -77,6 +82,56 @@ function AppRoutes() {
     <RutaProtegida>
       <LayoutAdmin>
         <Reposicion />
+      </LayoutAdmin>
+    </RutaProtegida>
+  }
+/>
+<Route
+  path="/admin/ventas"
+  element={
+    <RutaProtegida>
+      <LayoutAdmin>
+        <Ventas />
+      </LayoutAdmin>
+    </RutaProtegida>
+  }
+/>
+<Route
+  path="/admin/historial-ventas"
+  element={
+    <RutaProtegida>
+      <LayoutAdmin>
+        <HistorialVentas />
+      </LayoutAdmin>
+    </RutaProtegida>
+  }
+/>
+<Route
+  path="/admin/ventas-online"
+  element={
+    <RutaProtegida>
+      <LayoutAdmin>
+        <HistorialVentasOnline />
+      </LayoutAdmin>
+    </RutaProtegida>
+  }
+/>
+<Route
+  path="/admin/marcas"
+  element={
+    <RutaProtegida>
+      <LayoutAdmin>
+        <Marcas />
+      </LayoutAdmin>
+    </RutaProtegida>
+  }
+/>
+<Route
+  path="/admin/historias"
+  element={
+    <RutaProtegida>
+      <LayoutAdmin>
+        <GeneradorHistorias />
       </LayoutAdmin>
     </RutaProtegida>
   }

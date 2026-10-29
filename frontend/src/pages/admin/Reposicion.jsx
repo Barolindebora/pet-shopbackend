@@ -316,7 +316,15 @@ function Reposicion() {
   // =====================================================
   // INTERFAZ
   // =====================================================
+const obtenerCostoProducto = (productoId) => {
+  const producto = productos.find(
+    (producto) => producto.id === Number(productoId)
+  )
 
+  return producto
+    ? Number(producto.costoCompra)
+    : 0
+}
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-800">
@@ -501,6 +509,13 @@ function Reposicion() {
                             <th className="text-left px-5 py-3 text-sm text-gray-600">
                               Cantidad a reponer
                             </th>
+                            <th className="text-left px-5 py-3 text-sm text-gray-600">
+  Costo unitario
+</th>
+
+<th className="text-left px-5 py-3 text-sm text-gray-600">
+  Subtotal
+</th>
 
                             <th className="text-left px-5 py-3 text-sm text-gray-600">
                               Acciones
@@ -539,6 +554,24 @@ function Reposicion() {
                                     ? " kg"
                                     : " un."}
                                 </td>
+                                {/* COSTO UNITARIO */}
+<td className="px-5 py-4 text-gray-600">
+  $
+  {obtenerCostoProducto(
+    reposicion.productoId
+  ).toLocaleString("es-AR")}
+</td>
+
+
+{/* SUBTOTAL */}
+
+<td className="px-5 py-4 font-semibold text-gray-800">
+  $
+  {(
+    Number(reposicion.cantidadAReponer) *
+    obtenerCostoProducto(reposicion.productoId)
+  ).toLocaleString("es-AR")}
+</td>
 
                                 {/* ACCIONES */}
 
@@ -610,6 +643,29 @@ function Reposicion() {
                         </tbody>
 
                       </table>
+                      <div className="border-t border-gray-200 bg-gray-50 px-5 py-4 flex justify-end">
+
+  <div className="text-right">
+    <p className="text-sm text-gray-500">
+      Total estimado del pedido
+    </p>
+
+    <p className="text-2xl font-bold text-gray-800">
+      $
+     {grupo.productos
+  .reduce(
+    (total, reposicion) =>
+      total +
+      Number(reposicion.cantidadAReponer) *
+        obtenerCostoProducto(reposicion.productoId),
+    0
+  )
+  .toLocaleString("es-AR")}
+    </p>
+  </div>
+
+</div>
+                      
                     </div>
 
                   </div>

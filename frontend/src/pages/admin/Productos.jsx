@@ -41,8 +41,13 @@ const [productoEditando, setProductoEditando] = useState(null)
         }
 
         const datos = await respuesta.json()
+const productosOrdenados = [...datos].sort((a, b) =>
+  a.nombre.localeCompare(b.nombre, "es", {
+    sensitivity: "base",
+  })
+)
 
-        setProductos(datos)
+setProductos(productosOrdenados)
 
       } catch (error) {
         console.error(error)
@@ -343,8 +348,12 @@ const cambiarEstadoProducto = async (producto) => {
 
               <tr>
                 <th className="px-5 py-3">
+                  ID
+                </th>
+                <th className="px-5 py-3">
                   Producto
                 </th>
+                
 
                 <th className="px-5 py-3">
                   Presentación
@@ -381,7 +390,9 @@ const cambiarEstadoProducto = async (producto) => {
                   key={producto.id}
                   className="border-b border-gray-100"
                 >
-
+<td className="px-5 py-4 font-semibold text-purple-700">
+  #{producto.id}
+</td>
                   <td className="px-5 py-4 font-medium text-gray-800">
                     {producto.nombre}
                   </td>
