@@ -12,6 +12,14 @@ const [proveedores, setProveedores] = useState([])
 const [marcas, setMarcas] = useState([])
 const [categorias, setCategorias] = useState([])
 const [productoEditando, setProductoEditando] = useState(null)
+const [busqueda, setBusqueda] = useState("")
+const [productoSeleccionado, setProductoSeleccionado] = useState(null)
+
+const productosFiltrados = productos.filter((producto) =>
+  producto.nombre.toLowerCase().includes(busqueda.trim().toLowerCase()) ||
+  String(producto.id).includes(busqueda.trim().replace("#", "")) ||
+  String(producto.codigoBarra || "").includes(busqueda.trim())
+)
 
 
 
@@ -326,6 +334,72 @@ const cambiarEstadoProducto = async (producto) => {
       </div>
 
 
+      {/* BUSCAR PRODUCTOS */}
+
+      <div className="mb-5 rounded-xl bg-white p-4 shadow">
+        <label htmlFor="buscar-producto" className="mb-2 block font-medium text-gray-700">
+          Buscar producto por nombre, ID o código de barras
+        </label>
+        <input
+          id="buscar-producto"
+          type="text"
+          value={busqueda}
+          onChange={(event) => {
+            setBusqueda(event.target.value)
+            setProductoSeleccionado(null)
+          }}
+          placeholder="Ej.: Royal Canin, alimento adulto, #12..."
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-100"
+        />
+        {busqueda.trim() && (
+          <p className="mt-2 text-sm text-gray-500">
+            {productosFiltrados.length} producto(s) encontrado(s)
+          </p>
+        )}
+      </div>
+
+      {/* FICHA DEL PRODUCTO SELECCIONADO */}
+
+      {productoSeleccionado && (
+        <div className="mb-6 rounded-xl border border-purple-200 bg-white p-6 shadow">
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="text-sm font-semibold text-purple-700">FICHA DEL PRODUCTO · #{productoSeleccionado.id}</p>
+              <h2 className="mt-1 text-2xl font-bold text-gray-800">{productoSeleccionado.nombre}</h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => abrirEdicion(productoSeleccionado)}
+              className="rounded-lg bg-purple-700 px-4 py-2 font-medium text-white hover:bg-purple-800"
+            >
+              Editar producto
+            </button>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div><p className="text-sm text-gray-500">Presentación</p><p className="font-medium text-gray-800">{productoSeleccionado.presentacion || "-"}</p></div>
+            <div><p className="text-sm text-gray-500">Código de barras</p><p className="font-medium text-gray-800">{productoSeleccionado.codigoBarra || "-"}</p></div>
+            <div><p className="text-sm text-gray-500">Stock actual</p><p className="font-medium text-gray-800">{productoSeleccionado.stockActual} {productoSeleccionado.unidadStock === "KILOGRAMO" ? "kg" : "u."}</p></div>
+            <div><p className="text-sm text-gray-500">Costo de compra</p><p className="font-medium text-gray-800">${productoSeleccionado.costoCompra ?? "-"}</p></div>
+            <div><p className="text-sm text-gray-500">Precio en efectivo</p><p className="font-medium text-gray-800">${productoSeleccionado.precioEfectivo ?? "-"}</p></div>
+            <div><p className="text-sm text-gray-500">Precio con tarjeta</p><p className="font-medium text-gray-800">${productoSeleccionado.precioTarjeta ?? "-"}</p></div>
+            <div><p className="text-sm text-gray-500">Marca (ID)</p><p className="font-medium text-gray-800">{productoSeleccionado.marcaId ?? "-"}</p></div>
+            <div><p className="text-sm text-gray-500">Proveedor (ID)</p><p className="font-medium text-gray-800">{productoSeleccionado.proveedorId ?? "-"}</p></div>
+            <div><p className="text-sm text-gray-500">Estado</p><p className="font-medium text-gray-800">{productoSeleccionado.activo ? "Activo" : "Inactivo"}</p></div>
+            <div><p className="text-sm text-gray-500">Venta por encargo sin stock</p><p className="font-medium text-gray-800">{productoSeleccionado.ventaSinStock ? "Sí" : "No"}</p></div>
+            {productoSeleccionado.diasDisponibilidad != null && (
+              <div><p className="text-sm text-gray-500">Días de disponibilidad</p><p className="font-medium text-gray-800">{productoSeleccionado.diasDisponibilidad}</p></div>
+            )}
+            {productoSeleccionado.imagenUrl && (
+              <div className="sm:col-span-2 lg:col-span-3">
+                <p className="text-sm text-gray-500">Imagen del producto</p>
+                <a href={productoSeleccionado.imagenUrl} target="_blank" rel="noreferrer" className="break-all text-purple-700 underline">Ver imagen</a>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* LISTADO DE PRODUCTOS */}
 
       {productos.length === 0 ? (
@@ -384,7 +458,7 @@ const cambiarEstadoProducto = async (producto) => {
 
             <tbody>
 
-              {productos.map((producto) => (
+              {productosFiltrados.map((producto) => (
 
                 <tr
                   key={producto.id}
@@ -446,6 +520,14 @@ const cambiarEstadoProducto = async (producto) => {
 
     <button
       type="button"
+      onClick={() => setProductoSeleccionado(producto)}
+      className="text-blue-700 hover:text-blue-900 font-medium"
+    >
+      Ver ficha
+    </button>
+
+    <button
+      type="button"
       onClick={() => abrirEdicion(producto)}
       className="text-purple-700 hover:text-purple-900 font-medium"
     >
@@ -494,6 +576,14 @@ const cambiarEstadoProducto = async (producto) => {
                 </tr>
 
               ))}
+
+              {productosFiltrados.length === 0 && (
+                <tr>
+                  <td colSpan={8} className="px-5 py-8 text-center text-gray-500">
+                    No se encontraron productos con esa búsqueda.
+                  </td>
+                </tr>
+              )}
 
             </tbody>
 
